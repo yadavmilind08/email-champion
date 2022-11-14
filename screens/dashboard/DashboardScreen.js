@@ -1,21 +1,29 @@
 import { ScrollView, StyleSheet, View } from "react-native";
+import { useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 import { SummaryCard } from "../../components/SummaryCard";
+import { ContactContext } from "../../store/contact-context";
+import { CampaignContext } from "../../store/campaign-context";
 
 export const DashboardScreen = () => {
   const navigation = useNavigation();
+  const contactCtx = useContext(ContactContext);
+  const campaignCtx = useContext(CampaignContext);
+
+  const contacts = contactCtx.getAllContacts();
+  const campaigns = campaignCtx.getAllCampaigns();
 
   return (
     <ScrollView>
       <View style={styles.rootContainer}>
         <SummaryCard
-          count={5}
+          count={contacts.length}
           label="Contacts"
           onPress={() => navigation.navigate("Contacts")}
         ></SummaryCard>
         <SummaryCard
-          count={9}
+          count={campaigns.length}
           label="Campaigns"
           onPress={() => navigation.navigate("Campaigns")}
         ></SummaryCard>

@@ -59,7 +59,7 @@ export const CampaignEditScreen = () => {
             onUpdateValue={updateInputValueHandler.bind(this, "subject")}
             value={enteredSubject}
           />
-          <CampaignVarsScreen />
+          <CampaignVarsScreen template="energyBill" />
           <RadioButton
             data={data}
             value={enteredTemplateName}

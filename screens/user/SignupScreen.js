@@ -1,20 +1,17 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { AuthContent } from "../../components/AuthContent";
-import { createUser } from "../../util/auth";
 import { LoadingOverlay } from "../../components/LoadingOverlay";
+import { AuthContext } from "../../store/auth-context";
 
 export const SignupScreen = () => {
+  const authCtx = useContext(AuthContext);
+
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   async function signupHandler({ firstName, lastName, email, password }) {
-    const payload = {
-      first_name: firstName,
-      last_name: lastName,
-      email,
-      password,
-    };
     setIsAuthenticating(true);
-    const response = await createUser(payload);
+    authCtx.createUser(firstName, lastName, email, password);
+    authCtx.authenticate(email);
     setIsAuthenticating(false);
   }
 

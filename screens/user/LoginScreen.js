@@ -1,34 +1,26 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState, useContext } from "react";
+import { Alert } from "react-native";
 
 import { AuthContent } from "../../components/AuthContent";
-import { getAllUsers } from "../../util/auth";
 import { LoadingOverlay } from "../../components/LoadingOverlay";
+import { AuthContext } from "../../store/auth-context";
 
 export const LoginScreen = () => {
+  const authCtx = useContext(AuthContext);
+
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
-  useEffect(() => {
-    // async function getUsers() {
-    //   const response = await getAllUsers();
-    //   console.log(response.status);
-    // }
-    // getUsers();
-    axios
-      .get("http://localhost/users")
-      .then((res) => console.log("res", res.data))
-      .catch((err) => console.log(err));
-  }, []);
-
-  async function signinHandler({ firstName, lastName, email, password }) {
-    const payload = {
-      first_name: firstName,
-      last_name: lastName,
-      email,
-      password,
-    };
+  async function signinHandler({ email, password }) {
     setIsAuthenticating(true);
-    const response = await createUser(payload);
+    const users = authCtx.getAllUsers();
+    const index = users.findIndex(
+      (x) => x.email === email && x.password === password
+    );
+    if (index > -1) {
+      authCtx.authenticate(email);
+    } else {
+      Alert.alert("Login Failed!");
+    }
     setIsAuthenticating(false);
   }
 

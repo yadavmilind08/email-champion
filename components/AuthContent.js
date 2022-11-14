@@ -36,8 +36,8 @@ export const AuthContent = ({ isLogin, onAuthenticate }) => {
     const passwordIsValid = password.length > 8;
 
     if (
-      !firstNameIsValid ||
-      !lastNameIsValid ||
+      (!isLogin && !firstNameIsValid) ||
+      (!isLogin && !lastNameIsValid) ||
       !emailIsValid ||
       !passwordIsValid
     ) {

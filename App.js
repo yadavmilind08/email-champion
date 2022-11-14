@@ -8,12 +8,14 @@ import { SignupScreen } from "./screens/user/SignupScreen";
 import { DashboardScreen } from "./screens/dashboard/DashboardScreen";
 import { Colors } from "./constants/styles";
 import { IconButton } from "./components/IconButton";
-import { AuthContext } from "./store/auth-context";
+import AuthContextProvider, { AuthContext } from "./store/auth-context";
 import { ContactListScreen } from "./screens/contact/ContactListScreen";
 import { CampaignListScreen } from "./screens/campaign/CampaignListScreen";
 import { ContactEditScreen } from "./screens/contact/ContactEditScreen";
 import { TemplateListScreen } from "./screens/template/TemplateListScreen";
 import { CampaignEditScreen } from "./screens/campaign/CampaignEditScreen";
+import ContactContextProvider from "./store/contact-context";
+import CampaignContextProvider from "./store/campaign-context";
 
 const Stack = createStackNavigator();
 
@@ -62,10 +64,13 @@ function AuthenticatedStack() {
 }
 
 function Navigation() {
+  const authContext = useContext(AuthContext);
+
   return (
     <NavigationContainer>
+      {authContext.isAuthenticated ? <AuthenticatedStack /> : <AuthStack />}
       {/* <AuthStack /> */}
-      <AuthenticatedStack />
+      {/* <AuthenticatedStack /> */}
     </NavigationContainer>
   );
 }
@@ -74,8 +79,13 @@ export default function App() {
   return (
     <>
       <StatusBar style="light" />
-
-      <Navigation />
+      <AuthContextProvider>
+        <ContactContextProvider>
+          <CampaignContextProvider>
+            <Navigation />
+          </CampaignContextProvider>
+        </ContactContextProvider>
+      </AuthContextProvider>
     </>
   );
 }
