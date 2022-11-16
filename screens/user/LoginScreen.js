@@ -13,19 +13,20 @@ export const LoginScreen = () => {
 
   useEffect(() => {
     async function fetchAllUsers() {
+      setIsAuthenticating(true);
       try {
         const response = await getAllUsers();
         authCtx.saveUsers(response.data);
       } catch (err) {
         Alert.alert("LoginScreen getAllUsers error", err);
       }
+      setIsAuthenticating(false);
     }
 
     fetchAllUsers();
   }, []);
 
   async function signinHandler({ email, password }) {
-    setIsAuthenticating(true);
     const users = authCtx.users;
     const user = users.find(
       (x) => x.email === email && x.password === password
@@ -36,11 +37,10 @@ export const LoginScreen = () => {
     } else {
       Alert.alert("Login Failed!");
     }
-    setIsAuthenticating(false);
   }
 
   if (isAuthenticating) {
-    return <LoadingOverlay message="Logging you in..." />;
+    return <LoadingOverlay message="Loading..." />;
   }
   return <AuthContent isLogin onAuthenticate={signinHandler} />;
 };

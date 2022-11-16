@@ -1,42 +1,43 @@
 import { ScrollView, StyleSheet, View, Alert } from "react-native";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 import { SummaryCard } from "../../components/SummaryCard";
 import { ContactContext } from "../../store/contact-context";
 import { CampaignContext } from "../../store/campaign-context";
 import { getAllContacts } from "../../util/contact";
+import { LoadingOverlay } from "../../components/LoadingOverlay";
 
 export const DashboardScreen = () => {
   const navigation = useNavigation();
   const contactCtx = useContext(ContactContext);
   const campaignCtx = useContext(CampaignContext);
 
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+
   useEffect(() => {
-    async function fetchAllContacts() {
+    async function fetchAllContactsAndCampaigns() {
+      setIsAuthenticating(true);
       try {
-        const response = await getAllContacts();
-        contactCtx.saveContacts(response.data);
+        const contctResponse = await getAllContacts();
+        contactCtx.saveContacts(contctResponse.data);
+        const campaignResponse = await getAllCampaigns();
+        campaignCtx.saveCampaigns(campaignResponse.data);
       } catch (err) {
         Alert.alert("Error", err);
       }
+      setIsAuthenticating(false);
     }
 
-    async function fetchAllCampaigns() {
-      try {
-        const response = await getAllCampaigns();
-        campaignCtx.saveCampaigns(response.data);
-      } catch (err) {
-        Alert.alert("Error", err);
-      }
-    }
-
-    fetchAllContacts();
-    fetchAllCampaigns();
+    fetchAllContactsAndCampaigns();
   }, []);
 
   const contacts = contactCtx.contacts;
   const campaigns = campaignCtx.campaigns;
+
+  if (isAuthenticating) {
+    return <LoadingOverlay message="Creating user..." />;
+  }
 
   return (
     <ScrollView>
