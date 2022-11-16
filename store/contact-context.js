@@ -60,19 +60,43 @@ const contactList = [
 
 export const ContactContext = createContext({
   contacts: [],
-  getAllContacts: () => {},
+  saveContacts: () => {},
+  addContact: () => {},
+  editContact: () => {},
+  deleteContact: () => {},
 });
 
 function ContactContextProvider({ children }) {
-  const [contacts, setContacts] = useState(contactList);
+  const [contacts, setContacts] = useState([]);
 
-  function getAllContacts() {
-    return contacts;
+  function saveContacts(list) {
+    setContacts(list);
+  }
+
+  function addContact(newContact) {
+    setContacts([...contacts, { ...newContact, id: contacts.length + 1 }]);
+  }
+
+  function editContact(newContact) {
+    const newContactList = [...contacts];
+    const index = newContactList.findIndex((x) => x.id === newContact.id);
+    newContactList[index] = newContact;
+    setContacts([...newContactList]);
+  }
+
+  function deleteContact(newContact) {
+    const newContactList = [...contacts];
+    const index = newContactList.findIndex((x) => x.id === newContact.id);
+    newContactList.splice(index, 1);
+    setContacts([...newContactList]);
   }
 
   const value = {
     contacts: contacts,
-    getAllContacts: getAllContacts,
+    saveContacts: saveContacts,
+    addContact: addContact,
+    editContact: editContact,
+    deleteContact: deleteContact,
   };
 
   return (

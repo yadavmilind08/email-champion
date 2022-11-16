@@ -17,7 +17,7 @@ const userList = [
     password: "steve@gmail.com",
   },
   {
-    id: 2,
+    id: 3,
     first_name: "Milind",
     last_name: "Yadav",
     email: "milind@gmail.com",
@@ -31,13 +31,17 @@ export const AuthContext = createContext({
   authenticate: () => {},
   logout: () => {},
   users: [],
-  getAllUsers: () => {},
+  user: null,
   createUser: () => {},
+  saveUser: () => {},
+  addUser: () => {},
+  saveUsers: () => {},
 });
 
 function AuthContextProvider({ children }) {
   const [authToken, setAuthToken] = useState();
-  const [users, setUsers] = useState(userList);
+  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     async function fetchToken() {
@@ -65,10 +69,6 @@ function AuthContextProvider({ children }) {
     AsyncStorage.removeItem("token");
   }
 
-  function getAllUsers() {
-    return users;
-  }
-
   function createUser(firstName, lastName, email, password) {
     const newUser = {
       id: users.length + 1,
@@ -80,14 +80,29 @@ function AuthContextProvider({ children }) {
     setUsers([...users, newUser]);
   }
 
+  function addUser(newUser) {
+    setUsers([...users, newUser]);
+  }
+
+  function saveUser(item) {
+    setUser(item);
+  }
+
+  function saveUsers(list) {
+    setUsers(list);
+  }
+
   const value = {
     token: authToken,
     isAuthenticated: !!authToken,
     authenticate: authenticate,
     logout: logout,
     users: users,
-    getAllUsers: getAllUsers,
+    user: user,
     createUser: createUser,
+    addUser: addUser,
+    saveUser: saveUser,
+    saveUsers: saveUsers,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

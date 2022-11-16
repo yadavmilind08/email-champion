@@ -3,58 +3,49 @@ import { useNavigation } from "@react-navigation/native";
 
 import { Table } from "../../components/Table";
 import { Button } from "../../components/Button";
+import { CampaignContext } from "../../store/campaign-context";
+import { useContext } from "react";
 
 export const CampaignListScreen = () => {
   const navigation = useNavigation();
+  const campaignCtx = useContext(CampaignContext);
 
   const columns = ["Campaign Name", "Subject", "Status", "Template", ""];
   const keys = ["name", "subject", "status", "name"];
-  const data = [
-    {
-      id: 1,
-      name: "Energy bill May 2022",
-      subject: "Pay Energy Bill for May 2022",
-      status: "pending",
-      template: {
-        name: "EnergyBillTemplate",
-      },
-      template_vars: {
-        corporation_name: "Green Energy Corporation",
-        month: "May",
-        Year: "2022",
-        bill_amount: "2000",
-      },
-      contacts: [1, 3, 4],
-      userId: 1,
-    },
-    {
-      id: 2,
-      name: "Certificate distribution October 2022",
-      subject: "Certificate distribution in October 2022 TownHall",
-      status: "pending",
-      template_vars: {
-        hours: "40",
-        issuer: "UIE studio india",
-        course_name: "Nodejs Reskilling",
-      },
-      template: {
-        name: "CertificateTemplate",
-      },
-      contacts: [1, 4],
-      userId: 1,
-    },
-  ];
 
-  const onEditHandler = () => {
-    navigation.navigate("CampaignEdit");
+  const campaigns = campaignCtx.campaigns;
+
+  const onAddHandler = () => {
+    navigation.navigate("CampaignEdit", {
+      campaignId: null,
+    });
   };
-  const onDeleteHandler = () => {
+
+  const onEditHandler = (item) => {
+    navigation.navigate("CampaignEdit", {
+      campaignId: item.id,
+    });
+  };
+
+  const onDeleteHandler = (item) => {
     Alert.alert("Are you sure you want to delete?", undefined, [
-      { text: "Okay", style: "destructive", onPress: deleteContact },
+      {
+        text: "Okay",
+        style: "destructive",
+        onPress: () => deleteCampaign(item),
+      },
     ]);
   };
 
-  const deleteContact = () => {};
+  const deleteCampaign = (item) => {
+    campaignCtx.deleteCampaign(item);
+  };
+
+  const onRunHandler = (item) => {
+    navigation.navigate("GeneratedTemplates", {
+      campaignId: item.id,
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -64,13 +55,14 @@ export const CampaignListScreen = () => {
           <Text>List of all the campaigns created and sent.</Text>
         </View>
         <View>
-          <Button onPress={onEditHandler}>Add</Button>
+          <Button onPress={onAddHandler}>Add</Button>
         </View>
       </View>
       <Table
         columns={columns}
         keys={keys}
-        data={data}
+        data={campaigns}
+        onRun={onRunHandler}
         onEdit={onEditHandler}
         onDelete={onDeleteHandler}
       />

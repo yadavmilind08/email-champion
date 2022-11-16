@@ -3,81 +3,43 @@ import { useNavigation } from "@react-navigation/native";
 
 import { Button } from "../../components/Button";
 import { Table } from "../../components/Table";
+import { useContext } from "react";
+import { ContactContext } from "../../store/contact-context";
 
 export const ContactListScreen = () => {
   const navigation = useNavigation();
+  const contactCtx = useContext(ContactContext);
 
   const columns = ["First Name", "Last Name", "Email ID", "Gender", ""];
   const keys = ["first_name", "last_name", "email", "gender"];
-  const data = [
-    {
-      id: 1,
-      userId: 1,
-      first_name: "Shyam",
-      last_name: "Singh",
-      gender: "male",
-      email: "shyam@gmail.com",
-      address: "tokyo",
-      phone: "2345678765",
-      city: "japan",
-    },
-    {
-      id: 2,
-      userId: 2,
-      first_name: "Ram",
-      last_name: "Kumar",
-      gender: "male",
-      email: "ram@gmail.com",
-      address: "23/2 Broadway, Paris, France",
-      phone: "4567865436",
-      city: "Paris",
-    },
-    {
-      id: 3,
-      userId: 1,
-      first_name: "Ann",
-      last_name: "Smith",
-      gender: "male",
-      email: "ann@gmail.com",
-      address: "1310, 5th Avenue, 34th ST, New York City, USA",
-      phone: "6764234523",
-      city: "New York City",
-    },
-    {
-      id: 4,
-      userId: 1,
-      first_name: "Cesar",
-      last_name: "Godria",
-      gender: "male",
-      email: "cg@gmail.com",
-      address: "Malasiya",
-      phone: "4599909878",
-      city: "Miri",
-    },
-    {
-      id: 5,
-      userId: 2,
-      first_name: "Angelina",
-      last_name: "Smith",
-      gender: "female",
-      email: "angelina@gmail.com",
-      address: "indonesia",
-      phone: "7645433456",
-      city: "Jakarta",
-    },
-  ];
 
-  const onEditHandler = () => {
-    navigation.navigate("ContactEdit");
+  const contacts = contactCtx.contacts;
+
+  const onAddHandler = () => {
+    navigation.navigate("ContactEdit", {
+      contactId: null,
+    });
   };
 
-  const onDeleteHandler = () => {
+  const onEditHandler = (item) => {
+    navigation.navigate("ContactEdit", {
+      contactId: item.id,
+    });
+  };
+
+  const onDeleteHandler = (item) => {
     Alert.alert("Are you sure you want to delete?", undefined, [
-      { text: "Okay", style: "destructive", onPress: deleteContact },
+      {
+        text: "Okay",
+        style: "destructive",
+        onPress: () => deleteContact(item),
+      },
     ]);
   };
 
-  const deleteContact = () => {};
+  const deleteContact = (item) => {
+    contactCtx.deleteContact(item);
+  };
 
   return (
     <View style={styles.container}>
@@ -90,13 +52,13 @@ export const ContactListScreen = () => {
           </Text>
         </View>
         <View>
-          <Button onPress={onEditHandler}>Add</Button>
+          <Button onPress={onAddHandler}>Add</Button>
         </View>
       </View>
       <Table
         columns={columns}
         keys={keys}
-        data={data}
+        data={contacts}
         onEdit={onEditHandler}
         onDelete={onDeleteHandler}
       />

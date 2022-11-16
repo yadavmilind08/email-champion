@@ -3,23 +3,34 @@ import { View, StyleSheet } from "react-native";
 
 import { Input } from "../../components/Input";
 
-export const CampaignVarsScreen = ({ template, onChange }) => {
-  const [enteredCorporationName, setEnteredCorporationName] = useState("");
-  const [enteredMonth, setEnteredMonth] = useState("");
-  const [enteredYear, setEnteredYear] = useState("");
-  const [enteredBillAmount, setEnteredBillAmount] = useState("");
+export const CampaignVarsScreen = ({ template, templateVars, onChange }) => {
+  const [enteredCorporationName, setEnteredCorporationName] = useState(
+    templateVars?.corporation_name || ""
+  );
+  const [enteredMonth, setEnteredMonth] = useState(templateVars?.month || "");
+  const [enteredYear, setEnteredYear] = useState(templateVars?.Year || "");
+  const [enteredBillAmount, setEnteredBillAmount] = useState(
+    templateVars?.bill_amount || ""
+  );
 
-  const [enteredIssuer, setEnteredIssuer] = useState("");
-  const [enteredPersonName, setEnteredPersonName] = useState("");
-  const [enteredHours, setEnteredHours] = useState("");
-  const [enteredCourseName, setEnteredCourseName] = useState("");
+  const [enteredIssuer, setEnteredIssuer] = useState(
+    templateVars?.issuer || ""
+  );
+  const [enteredHours, setEnteredHours] = useState(templateVars?.hours || "");
+  const [enteredCourseName, setEnteredCourseName] = useState(
+    templateVars?.course_name || ""
+  );
 
-  const [enteredFirstName, setEnteredFirstName] = useState("");
-  const [enteredLastName, setEnteredLastName] = useState("");
-  const [enteredVenue, setEnteredVenue] = useState("");
-  const [enteredEventTime, setEnteredEventTime] = useState("");
-  const [enteredEventDate, setEnteredEventDate] = useState("");
-  const [enteredBandName, setEnteredBandName] = useState("");
+  const [enteredVenue, setEnteredVenue] = useState(templateVars?.venue || "");
+  const [enteredEventTime, setEnteredEventTime] = useState(
+    templateVars?.event_time || ""
+  );
+  const [enteredEventDate, setEnteredEventDate] = useState(
+    templateVars?.event_date || ""
+  );
+  const [enteredBandName, setEnteredBandName] = useState(
+    templateVars?.band_name || ""
+  );
 
   function updateInputValueHandler(inputType, enteredValue) {
     switch (inputType) {
@@ -38,20 +49,11 @@ export const CampaignVarsScreen = ({ template, onChange }) => {
       case "issuer":
         setEnteredIssuer(enteredValue);
         break;
-      case "personName":
-        setEnteredPersonName(enteredValue);
-        break;
       case "hours":
         setEnteredHours(enteredValue);
         break;
       case "courseName":
         setEnteredCourseName(enteredValue);
-        break;
-      case "firstName":
-        setEnteredFirstName(enteredValue);
-        break;
-      case "lastName":
-        setEnteredLastName(enteredValue);
         break;
       case "venue":
         setEnteredVenue(enteredValue);
@@ -66,37 +68,45 @@ export const CampaignVarsScreen = ({ template, onChange }) => {
         setEnteredBandName(enteredValue);
         break;
     }
-    const templateVars = {
-      corporation_name: enteredCorporationName,
-      month: enteredMonth,
-      Year: enteredYear,
-      bill_amount: enteredBillAmount,
-      hours: enteredHours,
-      issuer: enteredIssuer,
-      course_name: enteredCourseName,
-      venue: enteredVenue,
-      event_time: enteredEventTime,
-      event_date: enteredEventDate,
-      band_name: enteredBandName,
-    };
+    let templateVars = null;
+    switch (template) {
+      case "EnergyBillTemplate":
+        templateVars = {
+          corporation_name: enteredCorporationName,
+          month: enteredMonth,
+          Year: enteredYear,
+          bill_amount: enteredBillAmount,
+        };
+        break;
+      case "CertificateTemplate":
+        templateVars = {
+          hours: enteredHours,
+          issuer: enteredIssuer,
+          course_name: enteredCourseName,
+        };
+        break;
+      case "MusicalEventTemplate":
+        templateVars = {
+          venue: enteredVenue,
+          event_time: enteredEventTime,
+          event_date: enteredEventDate,
+          band_name: enteredBandName,
+        };
+        break;
+    }
+
     onChange && onChange(templateVars);
   }
 
   return (
     <View style={styles.container}>
-      {template === "certificate" && (
+      {template === "CertificateTemplate" && (
         <View>
           <Input
             label="Issuer"
             isWhiteLabel={false}
             onUpdateValue={updateInputValueHandler.bind(this, "issuer")}
             value={enteredIssuer}
-          />
-          <Input
-            label="Person Name"
-            isWhiteLabel={false}
-            onUpdateValue={updateInputValueHandler.bind(this, "personName")}
-            value={enteredPersonName}
           />
           <Input
             label="Hours"
@@ -112,7 +122,7 @@ export const CampaignVarsScreen = ({ template, onChange }) => {
           />
         </View>
       )}
-      {template === "energyBill" && (
+      {template === "EnergyBillTemplate" && (
         <View>
           <Input
             label="Corporation Name"
@@ -143,20 +153,8 @@ export const CampaignVarsScreen = ({ template, onChange }) => {
           />
         </View>
       )}
-      {template === "musicEvent" && (
+      {template === "MusicalEventTemplate" && (
         <View>
-          <Input
-            label="First Name"
-            isWhiteLabel={false}
-            onUpdateValue={updateInputValueHandler.bind(this, "firstName")}
-            value={enteredFirstName}
-          />
-          <Input
-            label="Last Name"
-            isWhiteLabel={false}
-            onUpdateValue={updateInputValueHandler.bind(this, "lastName")}
-            value={enteredLastName}
-          />
           <Input
             label="Venue"
             isWhiteLabel={false}

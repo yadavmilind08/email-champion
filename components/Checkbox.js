@@ -13,12 +13,11 @@ export const Checkbox = ({
   const [selectedValues, setSelectedValues] = useState([...values]);
 
   function onCheckmarkPress(item) {
-    const index = selectedValues.findIndex((x) => x.value === item.value);
-    if (index > -1) {
-      const newValues = selectedValues.filter((x) => x.value !== item.value);
+    if (selectedValues.includes(item.value)) {
+      const newValues = selectedValues.filter((x) => x !== item.value);
       setSelectedValues(newValues);
     } else {
-      const newValues = [...selectedValues, item];
+      const newValues = [...selectedValues, item.value];
       setSelectedValues(newValues);
     }
     onChange && onChange(selectedValues);
@@ -35,12 +34,11 @@ export const Checkbox = ({
             <Pressable
               style={[
                 styles.checkboxBase,
-                selectedValues.findIndex((x) => x.value === item.value) > -1 &&
-                  styles.checkboxChecked,
+                selectedValues.includes(item.value) && styles.checkboxChecked,
               ]}
               onPress={() => onCheckmarkPress(item)}
             >
-              {selectedValues.findIndex((x) => x.value === item.value) > -1 && (
+              {selectedValues.includes(item.value) && (
                 <IconButton icon="checkmark" size={24} color="white" />
               )}
             </Pressable>

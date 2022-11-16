@@ -9,7 +9,7 @@ import {
 import { IconButton } from "./IconButton";
 import { Colors } from "../constants/styles";
 
-export const Table = ({ columns, keys, data, onEdit, onDelete }) => {
+export const Table = ({ columns, keys, data, onRun, onEdit, onDelete }) => {
   const tableHeader = () => (
     <View style={styles.tableHeader}>
       {columns.map((column, index) => {
@@ -23,6 +23,14 @@ export const Table = ({ columns, keys, data, onEdit, onDelete }) => {
       })}
     </View>
   );
+
+  const onEditHandler = (item) => {
+    onEdit && onEdit(item);
+  };
+
+  const onDeleteHandler = (item) => {
+    onDelete && onDelete(item);
+  };
 
   return (
     <View style={styles.container}>
@@ -49,15 +57,22 @@ export const Table = ({ columns, keys, data, onEdit, onDelete }) => {
               })}
               <Text style={styles.columnRowTxt}>
                 <View style={styles.icons}>
+                  {onRun && (
+                    <IconButton
+                      icon="play-outline"
+                      size={18}
+                      onPress={() => onRun(item)}
+                    />
+                  )}
                   <IconButton
                     icon="create-outline"
                     size={18}
-                    onPress={onEdit}
+                    onPress={() => onEditHandler(item)}
                   />
                   <IconButton
                     icon="trash-outline"
                     size={18}
-                    onPress={onDelete}
+                    onPress={() => onDeleteHandler(item)}
                   />
                 </View>
               </Text>

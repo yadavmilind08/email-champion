@@ -1,18 +1,42 @@
-import { ScrollView, StyleSheet, View } from "react-native";
-import { useContext } from "react";
+import { ScrollView, StyleSheet, View, Alert } from "react-native";
+import { useContext, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 import { SummaryCard } from "../../components/SummaryCard";
 import { ContactContext } from "../../store/contact-context";
 import { CampaignContext } from "../../store/campaign-context";
+import { getAllContacts } from "../../util/contact";
 
 export const DashboardScreen = () => {
   const navigation = useNavigation();
   const contactCtx = useContext(ContactContext);
   const campaignCtx = useContext(CampaignContext);
 
-  const contacts = contactCtx.getAllContacts();
-  const campaigns = campaignCtx.getAllCampaigns();
+  useEffect(() => {
+    async function fetchAllContacts() {
+      try {
+        const response = await getAllContacts();
+        contactCtx.saveContacts(response.data);
+      } catch (err) {
+        Alert.alert("Error", err);
+      }
+    }
+
+    async function fetchAllCampaigns() {
+      try {
+        const response = await getAllCampaigns();
+        campaignCtx.saveCampaigns(response.data);
+      } catch (err) {
+        Alert.alert("Error", err);
+      }
+    }
+
+    fetchAllContacts();
+    fetchAllCampaigns();
+  }, []);
+
+  const contacts = contactCtx.contacts;
+  const campaigns = campaignCtx.campaigns;
 
   return (
     <ScrollView>

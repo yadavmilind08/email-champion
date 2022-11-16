@@ -1,14 +1,43 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { RadioButton } from "../../components/RadioButton";
+import { ContactContext } from "../../store/contact-context";
+import { AuthContext } from "../../store/auth-context";
 
 export const ContactEditScreen = () => {
-  const [enteredFirstName, setEnteredFirstName] = useState("");
-  const [enteredLastName, setEnteredLastName] = useState("");
-  const [enteredEmail, setEnteredEmail] = useState("");
+  const route = useRoute();
+  const navigation = useNavigation();
+  const contactCtx = useContext(ContactContext);
+  const authContext = useContext(AuthContext);
+
+  const contactId = route.params.contactId;
+  const selectedContact = contactCtx.contacts.find(
+    (item) => item.id === contactId
+  );
+  const title = contactId ? "Edit Contact" : "Add Contact";
+  navigation.setOptions({ title });
+
+  const data = [
+    { name: "Male", value: "male" },
+    { name: "Female", value: "female" },
+  ];
+
+  const [enteredFirstName, setEnteredFirstName] = useState(
+    selectedContact?.first_name || ""
+  );
+  const [enteredLastName, setEnteredLastName] = useState(
+    selectedContact?.last_name || ""
+  );
+  const [enteredEmail, setEnteredEmail] = useState(
+    selectedContact?.email || ""
+  );
+  const [enteredGender, setEnteredGender] = useState(
+    selectedContact?.gender || data[0].value
+  );
 
   function updateInputValueHandler(inputType, enteredValue) {
     switch (inputType) {
@@ -25,17 +54,29 @@ export const ContactEditScreen = () => {
   }
 
   const onChangeHandler = (value) => {
-    console.log({ value });
+    setEnteredGender(value);
   };
 
-  const data = [
-    { name: "Male", value: "male" },
-    { name: "Female", value: "female" },
-  ];
+  const onSubmit = () => {
+    const newContact = {
+      id: contactId || null,
+      userId: authContext.user.id,
+      first_name: enteredFirstName,
+      last_name: enteredLastName,
+      email: enteredEmail,
+      gender: enteredGender,
+    };
+    if (contactId) {
+      contactCtx.editContact(newContact);
+    } else {
+      contactCtx.addContact(newContact);
+    }
+    navigation.navigate("Contacts");
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Add contact</Text>
+      <Text style={styles.heading}>{title}</Text>
       <View style={styles.form}>
         <Input
           label="First Name"
@@ -58,12 +99,12 @@ export const ContactEditScreen = () => {
         />
         <RadioButton
           data={data}
-          value={data[0].value}
+          value={enteredGender}
           label="Gender"
           onChange={onChangeHandler}
         />
         <View style={styles.buttons}>
-          <Button>Add</Button>
+          <Button onPress={onSubmit}>{title}</Button>
         </View>
       </View>
     </View>
@@ -72,7 +113,7 @@ export const ContactEditScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
+    marginVertical: 20,
     marginHorizontal: 20,
   },
   form: {

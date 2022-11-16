@@ -55,19 +55,43 @@ const campaignList = [
 
 export const CampaignContext = createContext({
   campaigns: [],
-  getAllCampaigns: () => {},
+  saveCampaigns: () => {},
+  addCampaign: () => {},
+  editCampaign: () => {},
+  deleteCampaign: () => {},
 });
 
 function CampaignContextProvider({ children }) {
-  const [campaigns, setCampaigns] = useState(campaignList);
+  const [campaigns, setCampaigns] = useState([]);
 
-  function getAllCampaigns() {
-    return campaigns;
+  function saveCampaigns(list) {
+    setCampaigns(list);
+  }
+
+  function addCampaign(newCampaign) {
+    setCampaigns([...campaigns, { ...newCampaign, id: campaigns.length + 1 }]);
+  }
+
+  function editCampaign(newCampaign) {
+    const newCampaignList = [...campaigns];
+    const index = newCampaignList.findIndex((x) => x.id === newCampaign.id);
+    newCampaignList[index] = newCampaign;
+    setCampaigns([...newCampaignList]);
+  }
+
+  function deleteCampaign(newCampaign) {
+    const newCampaignList = [...campaigns];
+    const index = newCampaignList.findIndex((x) => x.id === newCampaign.id);
+    newCampaignList.splice(index, 1);
+    setCampaigns([...newCampaignList]);
   }
 
   const value = {
     campaigns: campaigns,
-    getAllCampaigns: getAllCampaigns,
+    saveCampaigns: saveCampaigns,
+    addCampaign: addCampaign,
+    editCampaign: editCampaign,
+    deleteCampaign: deleteCampaign,
   };
 
   return (

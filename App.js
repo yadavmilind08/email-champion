@@ -16,6 +16,7 @@ import { TemplateListScreen } from "./screens/template/TemplateListScreen";
 import { CampaignEditScreen } from "./screens/campaign/CampaignEditScreen";
 import ContactContextProvider from "./store/contact-context";
 import CampaignContextProvider from "./store/campaign-context";
+import { GeneratedTemplatesScreen } from "./screens/template/GeneratedTemplates";
 
 const Stack = createStackNavigator();
 
@@ -59,6 +60,10 @@ function AuthenticatedStack() {
       <Stack.Screen name="Campaigns" component={CampaignListScreen} />
       <Stack.Screen name="CampaignEdit" component={CampaignEditScreen} />
       <Stack.Screen name="Templates" component={TemplateListScreen} />
+      <Stack.Screen
+        name="GeneratedTemplates"
+        component={GeneratedTemplatesScreen}
+      />
     </Stack.Navigator>
   );
 }
