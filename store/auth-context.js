@@ -40,7 +40,7 @@ export const AuthContext = createContext({
 
 function AuthContextProvider({ children }) {
   const [authToken, setAuthToken] = useState();
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState(userList);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -77,6 +77,7 @@ function AuthContextProvider({ children }) {
       email,
       password,
     };
+    saveUser(newUser);
     setUsers([...users, newUser]);
   }
 

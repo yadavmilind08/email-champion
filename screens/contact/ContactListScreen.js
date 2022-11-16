@@ -44,16 +44,14 @@ export const ContactListScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.headerSection}>
-        <View>
-          <Text style={styles.header}>Contacts</Text>
-          <Text>
-            List of all the contacts which can be used to send capaigs to. You
-            can add, edit and delete contact.
-          </Text>
-        </View>
-        <View>
-          <Button onPress={onAddHandler}>Add</Button>
-        </View>
+        <Text style={styles.header}>Contacts</Text>
+        <Button onPress={onAddHandler}>Add</Button>
+      </View>
+      <View style={styles.subHeader}>
+        <Text>
+          List of all the contacts which can be used to send capaigs to. You can
+          add, edit and delete contact.
+        </Text>
       </View>
       <Table
         columns={columns}
@@ -75,11 +73,14 @@ const styles = StyleSheet.create({
   headerSection: {
     flexDirection: "row",
     alignItems: "center",
-    paddingRight: 50,
+    justifyContent: "space-between",
   },
   header: {
     fontWeight: "bold",
     fontSize: 30,
     marginBottom: 5,
+  },
+  subHeader: {
+    marginVertical: 5,
   },
 });

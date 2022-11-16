@@ -23,7 +23,7 @@ export const LoginScreen = () => {
       setIsAuthenticating(false);
     }
 
-    fetchAllUsers();
+    // fetchAllUsers();
   }, []);
 
   async function signinHandler({ email, password }) {
@@ -42,5 +42,6 @@ export const LoginScreen = () => {
   if (isAuthenticating) {
     return <LoadingOverlay message="Loading..." />;
   }
+
   return <AuthContent isLogin onAuthenticate={signinHandler} />;
 };

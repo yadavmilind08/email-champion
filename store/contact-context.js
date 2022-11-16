@@ -67,7 +67,7 @@ export const ContactContext = createContext({
 });
 
 function ContactContextProvider({ children }) {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(contactList);
 
   function saveContacts(list) {
     setContacts(list);

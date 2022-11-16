@@ -62,7 +62,7 @@ export const CampaignContext = createContext({
 });
 
 function CampaignContextProvider({ children }) {
-  const [campaigns, setCampaigns] = useState([]);
+  const [campaigns, setCampaigns] = useState(campaignList);
 
   function saveCampaigns(list) {
     setCampaigns(list);

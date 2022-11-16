@@ -15,7 +15,9 @@ export const SignupScreen = () => {
     if (index > -1) {
       Alert.alert("User already exists!");
     } else {
-      createNewUser(firstName, lastName, email, password);
+      authCtx.createUser(firstName, lastName, email, password);
+      authCtx.authenticate(email);
+      // createNewUser(firstName, lastName, email, password);
     }
   }
 

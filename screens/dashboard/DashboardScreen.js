@@ -29,14 +29,14 @@ export const DashboardScreen = () => {
       setIsAuthenticating(false);
     }
 
-    fetchAllContactsAndCampaigns();
+    // fetchAllContactsAndCampaigns();
   }, []);
 
   const contacts = contactCtx.contacts;
   const campaigns = campaignCtx.campaigns;
 
   if (isAuthenticating) {
-    return <LoadingOverlay message="Creating user..." />;
+    return <LoadingOverlay message="Loading data..." />;
   }
 
   return (

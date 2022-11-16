@@ -11,7 +11,6 @@ export async function createUser(firstName, lastName, email, password) {
   return response;
 }
 
-export async function getAllUsers() {
-  const response = await axios.get("http://localhost:3000/users");
-  return response;
+export function getAllUsers() {
+  return axios.get("http://localhost:3000/users");
 }
