@@ -10,6 +10,8 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import { CampaignContext } from "../../store/campaign-context";
 import { AuthContext } from "../../store/auth-context";
 import { ContactContext } from "../../store/contact-context";
+import { addCampaign } from "../../util/campaign";
+import { LoadingOverlay } from "../../components/LoadingOverlay";
 
 export const CampaignEditScreen = () => {
   const route = useRoute();
@@ -37,6 +39,8 @@ export const CampaignEditScreen = () => {
       value: x.id,
     };
   });
+
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   const [enteredCampaignName, setEnteredCampaignName] = useState(
     selectedCampaign?.name || ""
@@ -98,6 +102,21 @@ export const CampaignEditScreen = () => {
     }
     navigation.navigate("Campaigns");
   };
+
+  async function addNewCampaign(newContact) {
+    setIsAuthenticating(true);
+    try {
+      const response = await addCampaign(newContact);
+      campaignCtx.addCampaign(response.data);
+    } catch (err) {
+      console.log("CampaignEditScreen addCampaign error", err);
+    }
+    setIsAuthenticating(false);
+  }
+
+  if (isAuthenticating) {
+    return <LoadingOverlay message="Loading..." />;
+  }
 
   return (
     <ScrollView>

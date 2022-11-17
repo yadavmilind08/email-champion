@@ -50,13 +50,11 @@ export const CampaignListScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.headerSection}>
-        <View>
-          <Text style={styles.header}>Campaigns</Text>
-          <Text>List of all the campaigns created and sent.</Text>
-        </View>
-        <View>
-          <Button onPress={onAddHandler}>Add</Button>
-        </View>
+        <Text style={styles.header}>Campaigns</Text>
+        <Button onPress={onAddHandler}>Add</Button>
+      </View>
+      <View style={styles.subHeader}>
+        <Text>List of all the campaigns created and sent.</Text>
       </View>
       <Table
         columns={columns}
@@ -79,7 +77,10 @@ const styles = StyleSheet.create({
   headerSection: {
     flexDirection: "row",
     alignItems: "center",
-    paddingRight: 50,
+    justifyContent: "space-between",
+  },
+  subHeader: {
+    marginVertical: 5,
   },
   header: {
     fontWeight: "bold",

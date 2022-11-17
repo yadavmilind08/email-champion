@@ -3,12 +3,16 @@ import { useNavigation } from "@react-navigation/native";
 
 import { Button } from "../../components/Button";
 import { Table } from "../../components/Table";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ContactContext } from "../../store/contact-context";
+import { deleteContact } from "../../util/contact";
+import { LoadingOverlay } from "../../components/LoadingOverlay";
 
 export const ContactListScreen = () => {
   const navigation = useNavigation();
   const contactCtx = useContext(ContactContext);
+
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   const columns = ["First Name", "Last Name", "Email ID", "Gender", ""];
   const keys = ["first_name", "last_name", "email", "gender"];
@@ -32,14 +36,29 @@ export const ContactListScreen = () => {
       {
         text: "Okay",
         style: "destructive",
-        onPress: () => deleteContact(item),
+        onPress: () => deleteContactFromList(item),
       },
     ]);
   };
 
-  const deleteContact = (item) => {
+  const deleteContactFromList = (item) => {
     contactCtx.deleteContact(item);
   };
+
+  async function deleteExistingContact(newContact) {
+    setIsAuthenticating(true);
+    try {
+      const response = await deleteContact(newContact);
+      contactCtx.deleteContact(response.data);
+    } catch (err) {
+      console.log("ContactListScreen editContact error", err);
+    }
+    setIsAuthenticating(false);
+  }
+
+  if (isAuthenticating) {
+    return <LoadingOverlay message="Loading..." />;
+  }
 
   return (
     <View style={styles.container}>

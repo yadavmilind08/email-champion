@@ -7,6 +7,8 @@ import { Input } from "../../components/Input";
 import { RadioButton } from "../../components/RadioButton";
 import { ContactContext } from "../../store/contact-context";
 import { AuthContext } from "../../store/auth-context";
+import { LoadingOverlay } from "../../components/LoadingOverlay";
+import { createContact, editContact } from "../../util/contact";
 
 export const ContactEditScreen = () => {
   const route = useRoute();
@@ -25,6 +27,8 @@ export const ContactEditScreen = () => {
     { name: "Male", value: "male" },
     { name: "Female", value: "female" },
   ];
+
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   const [enteredFirstName, setEnteredFirstName] = useState(
     selectedContact?.first_name || ""
@@ -73,6 +77,32 @@ export const ContactEditScreen = () => {
     }
     navigation.navigate("Contacts");
   };
+
+  async function createNewContact(newContact) {
+    setIsAuthenticating(true);
+    try {
+      const response = await createContact(newContact);
+      contactCtx.addContact(response.data);
+    } catch (err) {
+      console.log("ContactEditScreen createContact error", err);
+    }
+    setIsAuthenticating(false);
+  }
+
+  async function editExistingContact(newContact) {
+    setIsAuthenticating(true);
+    try {
+      const response = await editContact(newContact);
+      contactCtx.editContact(response.data);
+    } catch (err) {
+      console.log("ContactEditScreen editContact error", err);
+    }
+    setIsAuthenticating(false);
+  }
+
+  if (isAuthenticating) {
+    return <LoadingOverlay message="Loading..." />;
+  }
 
   return (
     <View style={styles.container}>

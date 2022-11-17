@@ -16,11 +16,12 @@ export const Checkbox = ({
     if (selectedValues.includes(item.value)) {
       const newValues = selectedValues.filter((x) => x !== item.value);
       setSelectedValues(newValues);
+      onChange && onChange(newValues);
     } else {
       const newValues = [...selectedValues, item.value];
       setSelectedValues(newValues);
+      onChange && onChange(newValues);
     }
-    onChange && onChange(selectedValues);
   }
 
   return (
