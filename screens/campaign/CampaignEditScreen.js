@@ -98,6 +98,7 @@ export const CampaignEditScreen = () => {
       campaignCtx.editCampaign(newCampaign);
     } else {
       campaignCtx.addCampaign(newCampaign);
+      // addNewCampaign(newCampaign);
     }
     navigation.navigate("Campaigns");
   };
@@ -107,10 +108,11 @@ export const CampaignEditScreen = () => {
     try {
       const response = await addCampaign(newContact);
       campaignCtx.addCampaign(response.data);
+      setIsAuthenticating(false);
     } catch (err) {
+      setIsAuthenticating(false);
       console.log("CampaignEditScreen addCampaign error", err);
     }
-    setIsAuthenticating(false);
   }
 
   if (isAuthenticating) {

@@ -43,6 +43,7 @@ export const ContactListScreen = () => {
 
   const deleteContactFromList = (item) => {
     contactCtx.deleteContact(item);
+    // deleteExistingContact(item);
   };
 
   async function deleteExistingContact(newContact) {
@@ -50,10 +51,11 @@ export const ContactListScreen = () => {
     try {
       const response = await deleteContact(newContact);
       contactCtx.deleteContact(response.data);
+      setIsAuthenticating(false);
     } catch (err) {
+      setIsAuthenticating(false);
       console.log("ContactListScreen editContact error", err);
     }
-    setIsAuthenticating(false);
   }
 
   if (isAuthenticating) {

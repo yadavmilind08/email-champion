@@ -71,8 +71,10 @@ export const ContactEditScreen = () => {
     };
     if (contactId) {
       contactCtx.editContact(newContact);
+      // editExistingContact(newContact);
     } else {
       contactCtx.addContact(newContact);
+      // createNewContact(newContact);
     }
     navigation.navigate("Contacts");
   };
@@ -82,10 +84,11 @@ export const ContactEditScreen = () => {
     try {
       const response = await createContact(newContact);
       contactCtx.addContact(response.data);
+      setIsAuthenticating(false);
     } catch (err) {
+      setIsAuthenticating(false);
       console.log("ContactEditScreen createContact error", err);
     }
-    setIsAuthenticating(false);
   }
 
   async function editExistingContact(newContact) {
@@ -93,10 +96,11 @@ export const ContactEditScreen = () => {
     try {
       const response = await editContact(newContact);
       contactCtx.editContact(response.data);
+      setIsAuthenticating(false);
     } catch (err) {
+      setIsAuthenticating(false);
       console.log("ContactEditScreen editContact error", err);
     }
-    setIsAuthenticating(false);
   }
 
   if (isAuthenticating) {
