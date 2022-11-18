@@ -27,10 +27,12 @@ export const SignupScreen = () => {
       const response = await createUser(firstName, lastName, email, password);
       authCtx.addUser(response.data);
       authCtx.authenticate(email);
+      setIsAuthenticating(false);
     } catch (err) {
+      setIsAuthenticating(false);
+
       console.log("SignupScreen createUser error", err);
     }
-    setIsAuthenticating(false);
   }
 
   if (isAuthenticating) {

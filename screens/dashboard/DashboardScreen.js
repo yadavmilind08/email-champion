@@ -15,25 +15,31 @@ export const DashboardScreen = () => {
 
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
+  // const [contacts, setContacts] = useState([]);
+  // const [campaigns, setCampaigns] = useState([]);
+
+  const contacts = contactCtx.contacts;
+  const campaigns = campaignCtx.campaigns;
+
   useEffect(() => {
     async function fetchAllContactsAndCampaigns() {
       setIsAuthenticating(true);
       try {
         const contctResponse = await getAllContacts();
         contactCtx.saveContacts(contctResponse.data);
+        setContacts(contctResponse.data);
         const campaignResponse = await getAllCampaigns();
         campaignCtx.saveCampaigns(campaignResponse.data);
+        setCampaigns(campaignResponse.data);
+        setIsAuthenticating(false);
       } catch (err) {
-        Alert.alert("Error", err);
+        setIsAuthenticating(false);
+        console.log("DashboardScreen fetchAllContactsAndCampaigns Error", err);
       }
-      setIsAuthenticating(false);
     }
 
     // fetchAllContactsAndCampaigns();
   }, []);
-
-  const contacts = contactCtx.contacts;
-  const campaigns = campaignCtx.campaigns;
 
   if (isAuthenticating) {
     return <LoadingOverlay message="Loading data..." />;

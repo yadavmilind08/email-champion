@@ -17,10 +17,11 @@ export const LoginScreen = () => {
       try {
         const response = await getAllUsers();
         authCtx.saveUsers(response.data);
+        setIsAuthenticating(false);
       } catch (err) {
-        Alert.alert("LoginScreen getAllUsers error", err);
+        setIsAuthenticating(false);
+        console.log("LoginScreen getAllUsers error", err);
       }
-      setIsAuthenticating(false);
     }
 
     // fetchAllUsers();
