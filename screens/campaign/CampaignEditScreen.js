@@ -25,7 +25,6 @@ export const CampaignEditScreen = () => {
     (item) => item.id === campaignId
   );
   const title = campaignId ? "Edit Camapign" : "Add Camapign";
-  navigation.setOptions({ title });
 
   const data = [
     { name: "Energy Bill Template", value: "EnergyBillTemplate" },

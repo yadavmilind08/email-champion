@@ -21,7 +21,6 @@ export const ContactEditScreen = () => {
     (item) => item.id === contactId
   );
   const title = contactId ? "Edit Contact" : "Add Contact";
-  navigation.setOptions({ title });
 
   const data = [
     { name: "Male", value: "male" },
